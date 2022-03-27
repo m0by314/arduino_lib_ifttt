@@ -6,7 +6,7 @@
 
 #define HOST "maker.ifttt.com"
 #define SSL_PORT 443
-
+#define DEBUG 0   // 1 to active debug 
 
 /**
  * Constructor
@@ -27,17 +27,17 @@ IFTTT::IFTTT (const char* ifttt_key, Client &client) {
  * 
  * @return true when trigger event is correctly sent
 */
-bool IFTTT::triggerEvent(String eventName , String value1, String value2, String value3, bool debug){
+bool IFTTT::triggerEvent(String eventName , String value1, String value2, String value3){
     String response = "";
-    String payload = _build_payload(value1,value2,value3, debug);
+    String payload = _build_payload(value1,value2,value3);
     int payload_len = payload.length();
 
     if (!_client->connect(HOST, SSL_PORT)) {
-        if (debug) Serial.println("Connection failed!");
+        if (DEBUG) Serial.println("Connection failed!");
         _client->stop();
     }
     else {
-        if (debug) Serial.println("Connected to server!");
+        if (DEBUG) Serial.println("Connected to server!");
         
         // Make a HTTP request:
         _client->println("POST /trigger/"+eventName+"/with/key/"+_key + " HTTP/1.1");
@@ -61,7 +61,7 @@ bool IFTTT::triggerEvent(String eventName , String value1, String value2, String
             response = response + c;
 	    }
     }
-    if (debug) {
+    if (DEBUG) {
         Serial.println("Response:");
         Serial.println(response);
     }
@@ -91,7 +91,7 @@ bool IFTTT::_check_response_success(String response) {
  * 
  * @return payload
 */ 
-String IFTTT::_build_payload(String value1, String value2, String value3, bool debug) {
+String IFTTT::_build_payload(String value1, String value2, String value3) {
     String payload = "{";
     if (value1) {
         payload = payload + "\"value1\":\"" + value1;
@@ -104,7 +104,7 @@ String IFTTT::_build_payload(String value1, String value2, String value3, bool d
     }
     payload += "\"}";
 
-    if (debug) {
+    if (DEBUG) {
         Serial.println("Payload:");
         Serial.println(payload);
     }

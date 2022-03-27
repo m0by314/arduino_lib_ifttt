@@ -17,21 +17,16 @@
 #include <Arduino.h>
 #include <Client.h>
 
-
-#define HOST "maker.ifttt.com"
-#define SSL_PORT 443
-
-
 class IFTTT {
     public:
         IFTTT(const char* ifttt_key, Client &client);
-        bool triggerEvent(String eventName , String value1, String value2, String value3, bool debug=false);
+        bool triggerEvent(String eventName , String value1, String value2, String value3);
 
     private:
         const char* _key;
         Client *_client;
 
-        String _build_payload(String value1, String value2, String value3, bool debug=false);
+        String _build_payload(String value1, String value2, String value3);
         bool _check_response_success(String response);
 };
 
